@@ -6,7 +6,7 @@ PreDown = ufw route delete allow in on {} out on {}
 PreDown = iptables -t nat -D POSTROUTING -s {} -o {} -j MASQUERADE
 ListenPort = {}
 PrivateKey = {}
-# SaveConfig = false
+SaveConfig = false
 FwMark = {}
 MTU = {}
 
