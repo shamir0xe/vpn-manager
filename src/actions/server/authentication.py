@@ -1,4 +1,4 @@
-from src.helpers.config.config import Config
+from libs.python_library.config.config import Config
 
 
 class Authentication:

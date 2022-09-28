@@ -1,9 +1,9 @@
-from src.helpers.path.path import Path
+from libs.python_library.path.path import Path
 from src.helpers.log.runtime_log import RuntimeLog
 from src.models.types.node_types import NodeTypes
 from src.helpers.terminal.single_process import SingleProcess
-from libs.python_library.helpers.json_helper import JsonHelper
-from src.helpers.config.config import Config
+from libs.python_library.json.json_helper import JsonHelper
+from libs.python_library.config.config import Config
 
 
 class TerminalExecuter:

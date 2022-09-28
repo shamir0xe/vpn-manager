@@ -1,5 +1,5 @@
 from multiprocessing import Process
-from src.helpers.config.config import Config
+from libs.python_library.config.config import Config
 from src.helpers.log.runtime_log import RuntimeLog
 from src.helpers.socket.socket_helper import SocketHelper
 from src.mediators.server_mediator import ServerMediator

@@ -1,6 +1,6 @@
 import random
-from src.helpers.argument.argument_parser import ArgumentParser
-from src.helpers.config.config import Config
+from libs.python_library.argument.argument_parser import ArgumentParser
+from libs.python_library.config.config import Config
 from src.models.types.node_types import NodeTypes
 from src.helpers.terminal.single_process import SingleProcess
 

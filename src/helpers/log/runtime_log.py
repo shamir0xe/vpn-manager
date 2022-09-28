@@ -1,6 +1,6 @@
 from __future__ import annotations
 from datetime import datetime
-from src.helpers.path.path import Path
+from libs.python_library.path.path import Path
 from libs.python_library.io.buffer_writer import BufferWriter
 from libs.python_library.io.file_buffer import FileBuffer
 

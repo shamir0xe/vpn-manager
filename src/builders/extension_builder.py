@@ -1,9 +1,9 @@
 from __future__ import annotations
-from src.helpers.config.config import Config
-from src.helpers.file.file import File
+from libs.python_library.config.config import Config
+from libs.python_library.file.file import File
 from src.helpers.log.runtime_log import RuntimeLog
-from src.helpers.path.path import Path
-from libs.python_library.helpers.json_helper import JsonHelper
+from libs.python_library.path.path import Path
+from libs.python_library.json.json_helper import JsonHelper
 from src.models.types.node_types import NodeTypes
 
 
