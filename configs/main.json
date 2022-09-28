@@ -1,0 +1,67 @@
+{
+    "gate": {
+        "name": "gate",
+        "config": {
+            "path": "/etc/temp/gate0.conf"
+        },
+        "commands": {
+            "up": "wg-quick up gate0",
+            "down": "wg-quick down gate0",
+            "ufw": {
+                "delete": ["ufw", "delete", "allow"],
+                "allow": ["ufw", "allow"]
+            },
+            "systemctl": {
+                "ufw": {
+                    "restart": ["systemctl", "restart", "ufw.service"]
+                }
+            }
+        },
+        "template_path": ["configs", "templates", "gate.template"],
+        "node_config_path": ["configs", "gate.json"],
+        "log": {
+            "path": ["storage", "gate.log"]
+        }
+    },
+    "middleman": {
+        "name": "middleman",
+        "config": {
+            "path": "/etc/temp/wg0.conf"
+        },
+        "commands": {
+            "up": "wg-quick up wg0",
+            "down": "wg-quick down wg0",
+            "ufw": {
+                "delete": ["ufw", "delete", "allow"],
+                "allow": ["ufw", "allow"]
+            },
+            "systemctl": {
+                "ufw": {
+                    "restart": ["systemctl", "restart", "ufw.service"]
+                }
+            }
+        },
+        "template_path": ["configs", "templates", "middleman.template"],
+        "node_config_path": ["configs", "middleman.json"],
+        "extensions": {
+            "after": [
+                ["assets", "users_data"]
+            ]
+        },
+        "log": {
+            "path": ["storage", "middleman.log"]
+        }
+    },
+    "server": {
+        "log": {
+            "path": ["storage", "server.log"]
+        }
+    },
+    "connection": {
+        "timeout": 2,
+        "total_timeout": 10
+    },
+    "general": {
+        "python_interpreter": "python3"
+    }
+}

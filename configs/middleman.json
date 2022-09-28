@@ -1,0 +1,1 @@
+{"data": {"interface": {"address": "10.49.0.99/32", "wg": "wg0", "port": 51607, "private_key": "", "mtu": 1380}, "peer": {"public_key": "", "ip": "", "port": 51345}}, "order": ["interface.address", "interface.wg", "interface.wg", "interface.wg", "interface.wg", "interface.port", "interface.private_key", "interface.mtu", "peer.public_key", "peer.ip", "peer.port"]}

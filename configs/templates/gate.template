@@ -1,0 +1,17 @@
+[Interface]
+Address = {} 
+PostUp = ufw route allow in on {} out on {}
+PostUp = iptables -t nat -A POSTROUTING -s {} -o {} -j MASQUERADE
+PreDown = ufw route delete allow in on {} out on {}
+PreDown = iptables -t nat -D POSTROUTING -s {} -o {} -j MASQUERADE
+ListenPort = {}
+PrivateKey = {}
+# SaveConfig = false
+FwMark = {}
+MTU = {}
+
+[Peer]
+# middleman
+PublicKey = {}
+AllowedIPs = {}
+Endpoint = {}:{}
