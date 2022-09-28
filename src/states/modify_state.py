@@ -33,10 +33,10 @@ class ModifyState:
             .save() \
             .add_new_ufw() \
             .reset_ufw_service() \
-            .up_vpn()
-        # send-log part
-        app \
             .send_changes_to_gates() \
+            .up_vpn()
+        # log part
+        app \
             .telegram_broadcast() \
             .add_log('end of the process') \
             .closure()
