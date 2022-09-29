@@ -19,7 +19,7 @@ class RequestResolver:
     
     def do(self) -> bool:
         loop = False
-        request = self.reader.next_line()[:-1]
+        request = self.reader.next_line().strip()
         print(f'request is: {request}')
         parser = BufferReader(StringBuffer(request))
         command = parser.next_string()

@@ -13,15 +13,16 @@ class ServerMediator:
         self.status = True
         self.sock = sock
         self.log = log
-        self.reader = BufferReader(SocketBuffer(sock))
-        self.writer = BufferWriter(SocketBuffer(sock))
+        buffer = SocketBuffer(sock)
+        self.reader = BufferReader(buffer)
+        self.writer = BufferWriter(buffer)
     
     def auth(self) -> ServerMediator:
         if not self.status:
             return self
         self.log.add_log('Authentication: ')
-        username = self.reader.next_line()[:-1]
-        password = self.reader.next_line()[:-1]
+        username = self.reader.next_line().strip()
+        password = self.reader.next_line().strip()
         self.log.add_log(f'({username}, {password})', 'login-attempt')
         if Authentication.withUsername(username, password):
             self.writer.write_line('OK')

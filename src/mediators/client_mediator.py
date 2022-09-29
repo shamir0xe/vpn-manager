@@ -35,9 +35,12 @@ class ClientMediator:
             ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
             username, password = (Config.read('env.server.username'), Config.read('env.server.password'))
             self.sock.connect((ip, port))
-            self.writer.write_line(username)
-            self.writer.write_line(password)
-            response = self.reader.next_line()[:-1]
+            self.writer.write(
+                f'{username}\n{password}\n'
+            )
+            # self.writer.write_line(username)
+            # self.writer.write_line(password)
+            response = self.reader.next_line().strip()
             self.__log.add_log(response, 'login-response')
             if response != 'OK':
                 self.status = False
@@ -55,7 +58,7 @@ class ClientMediator:
             self.writer.write_line(
                 f"{ServerCommands.RUN_MODIFICATION.value} --gate --interface.port {gate_port} --peer.port {port}"
             )
-            response = self.reader.next_line()[:-1]
+            response = self.reader.next_line().strip()
             self.__log.add_log(f'response: {response}', 'request-modification')
             if response != 'OK':
                 self.status = False
@@ -69,8 +72,9 @@ class ClientMediator:
         if not self.status:
             return self
         try:
+            self.__log.add_log('requesting end', 'request-end')
             self.writer.write_line(f"{ServerCommands.END.value}")
-            response = self.reader.next_line()[:-1]
+            response = self.reader.next_line().strip()
             self.__log.add_log(response, 'request-end')
         except BaseException as err:
             self.status = False
@@ -79,6 +83,6 @@ class ClientMediator:
     def close(self) -> ClientMediator:
         try:
             self.sock.close()
-        except:
+        except BaseException as _:
             pass
         return self

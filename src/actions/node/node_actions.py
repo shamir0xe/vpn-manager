@@ -24,10 +24,10 @@ class NodeActions:
     def access_peer() -> bool:
         peer_type = NodeActions.extract_peer_type()
         ip = Config.read(f'env.{peer_type.value}.ip')
-        _, err = SingleProcess(
+        out, err = SingleProcess(
             'ping', '-c', '1', '-W', Config.read('main.connection.timeout'), ip
         ).run().communicate()
-        if err != '':
+        if err != '' or '0 received' in out:
             return False
         return True
 
