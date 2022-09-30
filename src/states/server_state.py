@@ -16,22 +16,18 @@ class ServerState:
         # HOST = '127.0.0.1'   # Symbolic name meaning all available interfaces
         HOST = '185.235.40.240'   # Symbolic name meaning all available interfaces
         PORT = 50007              # Arbitrary non-privileged port
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((HOST, PORT))
-        s.listen(1)
-        while True:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.bind((HOST, PORT))
+            s.listen(1)
             conn, addr = s.accept()
-            writer, reader = BufferWriter(SocketBuffer(conn)), BufferReader(SocketBuffer(conn))
             with conn:
                 print('Connected by', addr)
-                try:
-                    while True:
-                        data = reader.next_line().strip()
-                        print('recieved : ' + data)
-                        writer.write_line('OK')
-                except BaseException as err:
-                    print(f'err: {err}')
+                while True:
+                    data = conn.recv(1024)
+                    if not data: break
+                    conn.sendall(data)
+        return
 
         log = RuntimeLog(*Config.read('main.server.log.path'))
         log.add_log('server started', 'server-state')
