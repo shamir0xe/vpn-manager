@@ -26,9 +26,9 @@ class ServerState:
                 with conn:
                     print('Connected by', addr)
                     while True:
-                        data = conn.recv(1024)
+                        data = conn.recv(10)
                         if not data: break
-                        conn.sendto(data, addr)
+                        conn.sendall(data)
         return
 
         log = RuntimeLog(*Config.read('main.server.log.path'))

@@ -21,8 +21,8 @@ class ModifyState:
         # s.connect((HOST, PORT))
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, snd_port))
-            s.sendall(b'Hello, world')
-            data = s.recv(1024)
+            s.sendall(b'0123456789')
+            data = s.recv(10)
         print('Received', repr(data))
 
         # writer, reader = BufferWriter(SocketBuffer(s)), BufferReader(SocketBuffer(s))
