@@ -8,29 +8,6 @@ from src.mediators.server_mediator import ServerMediator
 class ServerState:
     @staticmethod
     def run():
-        import socket
-        from libs.python_library.io.buffer_reader import BufferReader
-        from libs.python_library.io.buffer_writer import BufferWriter
-        from src.helpers.socket.socket_buffer import SocketBuffer
-
-        # HOST = '127.0.0.1'   # Symbolic name meaning all available interfaces
-        HOST = '185.235.40.240'   # Symbolic name meaning all available interfaces
-        snd_port = 50080         
-        rec_port = 50081
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            s.bind((HOST, rec_port))
-            s.listen(1)
-            while True:
-                conn, addr = s.accept()
-                with conn:
-                    print('Connected by', addr)
-                    while True:
-                        data = conn.recv(10)
-                        if not data: break
-                        conn.sendall(data)
-        return
-
         log = RuntimeLog(*Config.read('main.server.log.path'))
         log.add_log('server started', 'server-state')
         log.add_log(f'listening to {Config.read("env.server.ip")}:{Config.read("env.server.port")}', 'server-state')
@@ -64,3 +41,55 @@ class ServerState:
         finally:
             sock.shutdown(1)
             sock.close()
+
+import socket
+import select
+
+class ChatServer:
+
+  def __init__( self, port ):
+    self.port = port
+    self.srvsock = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+    self.srvsock.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
+    self.srvsock.bind( ("", port) )
+    self.srvsock.listen( 5 )
+    self.descriptors = [self.srvsock]    
+    print ('ChatServer started on port %s' % port)
+
+  def run( self ):
+    while True:
+        #Await an event on a readable socket descriptor
+        (sread, swrite, sexc) = select.select(self.descriptors, [], [])
+        #Iterate through the tagged read descriptors
+        for sock in sread:
+            #Received a connect to the server (listening) socket
+            if sock == self.srvsock:
+                self.accept_new_connection()
+            else:
+                #Received something on a client socket
+                str = sock.recv(100).decode()
+                #Check to see if the peer socket closed
+                if str == '':
+                    host,port = sock.getpeername()
+                    str = 'Client left %s:%s\r\n' % (host, port)
+                    self.broadcast_string( str, sock )
+                    sock.close()
+                    self.descriptors.remove(sock)
+                else:
+                    host,port = sock.getpeername()
+                    newstr = '[%s:%s] %s' % (host, port, str)
+                    self.broadcast_string( newstr, sock )
+
+  def broadcast_string( self, str, omit_sock ):
+    for sock in self.descriptors:
+        if sock != self.srvsock and sock != omit_sock:
+            sock.sendall(str.encode())
+    print(str)
+
+  def accept_new_connection( self ):
+    newsock, (remhost, remport) = self.srvsock.accept()
+    self.descriptors.append( newsock )
+
+    newsock.sendall("You're connected to the Python chatserver\r\n".encode())
+    str = 'Client joined %s:%s\r\n' % (remhost, remport)
+    self.broadcast_string( str, newsock )
