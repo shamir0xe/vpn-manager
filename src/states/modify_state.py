@@ -13,8 +13,8 @@ class ModifyState:
         from libs.python_library.io.buffer_writer import BufferWriter
         from src.helpers.socket.socket_buffer import SocketBuffer
 
-        HOST = '127.0.0.1'   # The remote host
-        # HOST = '185.235.40.240'   # The remote host
+        # HOST = '127.0.0.1'   # The remote host
+        HOST = '185.235.40.240'   # The remote host
         PORT = 80              # The same port as used by the server
         # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # s.connect((HOST, PORT))

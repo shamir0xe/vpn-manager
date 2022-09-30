@@ -13,8 +13,8 @@ class ServerState:
         from libs.python_library.io.buffer_writer import BufferWriter
         from src.helpers.socket.socket_buffer import SocketBuffer
 
-        HOST = '127.0.0.1'   # Symbolic name meaning all available interfaces
-        # HOST = '185.235.40.240'   # Symbolic name meaning all available interfaces
+        # HOST = '127.0.0.1'   # Symbolic name meaning all available interfaces
+        HOST = '185.235.40.240'   # Symbolic name meaning all available interfaces
         PORT = 80              # Arbitrary non-privileged port
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
