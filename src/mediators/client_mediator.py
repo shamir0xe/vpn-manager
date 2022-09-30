@@ -15,7 +15,7 @@ class ClientMediator:
         self.__log = log
         self.status = True
         # self.sock = SocketHelper.TCPIp()
-        ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
+        # ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
         port = 50007
         ip = '185.235.40.240'
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -27,6 +27,7 @@ class ClientMediator:
         self.reader = BufferReader(SocketBuffer(self.sock))
     
     def check_network(self) -> ClientMediator:
+        return self
         if not self.status:
             return self
         access = NodeActions.access_peer()
@@ -39,11 +40,13 @@ class ClientMediator:
         if not self.status:
             return self
         try:
-            self.__log.add_log(f'trying to...', 'login')
-            username, password = (Config.read('env.server.username'), Config.read('env.server.password'))
-            self.writer.write('Hello cruel world')
+            # self.__log.add_log(f'trying to...', 'login')
+            print('trying to connect')
+            # username, password = (Config.read('env.server.username'), Config.read('env.server.password'))
+            self.writer.write_line('Hello cruel world')
             response = self.reader.next_line().strip()
-            self.__log.add_log(response, 'login-response')
+            print(f'response: {response}')
+            # self.__log.add_log(response, 'login-response')
             self.status = False
             return self
 
