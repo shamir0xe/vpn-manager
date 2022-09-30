@@ -15,10 +15,11 @@ class ServerState:
 
         # HOST = '127.0.0.1'   # Symbolic name meaning all available interfaces
         HOST = '185.235.40.240'   # Symbolic name meaning all available interfaces
-        PORT = 80              # Arbitrary non-privileged port
+        snd_port = 50080         
+        rec_port = 50081
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            s.bind((HOST, PORT))
+            s.bind((HOST, rec_port))
             s.listen(1)
             while True:
                 conn, addr = s.accept()
@@ -27,7 +28,7 @@ class ServerState:
                     while True:
                         data = conn.recv(1024)
                         if not data: break
-                        conn.sendall(data)
+                        conn.sendto(data, addr)
         return
 
         log = RuntimeLog(*Config.read('main.server.log.path'))

@@ -15,11 +15,12 @@ class ModifyState:
 
         # HOST = '127.0.0.1'   # The remote host
         HOST = '185.235.40.240'   # The remote host
-        PORT = 80              # The same port as used by the server
+        snd_port = 50081         
+        rec_port = 50080
         # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # s.connect((HOST, PORT))
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((HOST, PORT))
+            s.connect((HOST, snd_port))
             s.sendall(b'Hello, world')
             data = s.recv(1024)
         print('Received', repr(data))
