@@ -15,8 +15,8 @@ class ClientMediator:
         self.status = True
         self.sock = SocketHelper.TCPIp()
         ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
-        # ip = '185.235.40.240'
-        ip = '127.0.0.1'
+        ip = '185.235.40.240'
+        # ip = '127.0.0.1'
         port = 50007
         self.sock.connect((ip, port))
         self.sock.setblocking(False)
@@ -38,6 +38,12 @@ class ClientMediator:
         try:
             self.__log.add_log(f'trying to...', 'login')
             username, password = (Config.read('env.server.username'), Config.read('env.server.password'))
+            self.writer.write('Hello cruel world')
+            response = self.reader.next_line().strip()
+            self.__log.add_log(response, 'login-response')
+            self.status = False
+            return self
+
             self.writer.write(
                 f'{username}\n{password}\n'
             )
