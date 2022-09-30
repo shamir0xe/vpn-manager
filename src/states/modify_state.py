@@ -10,8 +10,8 @@ class ModifyState:
         import socket
         import time
 
-        HOST = '127.0.0.1'        # The remote host
-        # HOST = 'zimbo.app'        # The remote host
+        HOST = '185.235.40.240'   # The remote host
+        # HOST = 'zimbo.app'      # The remote host
         PORT = 50007              # The same port as used by the server
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
