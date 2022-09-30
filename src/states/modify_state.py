@@ -7,28 +7,28 @@ from src.actions.node.node_actions import NodeActions
 class ModifyState:
     @staticmethod
     def run(flow: FlowTypes) -> None:
-        # import socket
-        # import time
-        # from libs.python_library.io.buffer_reader import BufferReader
-        # from libs.python_library.io.buffer_writer import BufferWriter
-        # from src.helpers.socket.socket_buffer import SocketBuffer
+        import socket
+        import time
+        from libs.python_library.io.buffer_reader import BufferReader
+        from libs.python_library.io.buffer_writer import BufferWriter
+        from src.helpers.socket.socket_buffer import SocketBuffer
 
-        # # HOST = '127.0.0.1'   # The remote host
-        # HOST = '185.235.40.240'   # The remote host
-        # PORT = 50007              # The same port as used by the server
-        # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # s.connect((HOST, PORT))
-        # writer, reader = BufferWriter(SocketBuffer(s)), BufferReader(SocketBuffer(s))
-        # while True:
-        #     writer.write_line('Hello, cruel world')
-        #     try:
-        #         data = reader.next_line()
-        #         print('Received', data.strip())
-        #         time.sleep(1)
-        #     except BaseException as err:
-        #         print(f'err: {err}')
-        #         break
-        # return
+        # HOST = '127.0.0.1'   # The remote host
+        HOST = '185.235.40.240'   # The remote host
+        PORT = 50007              # The same port as used by the server
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((HOST, PORT))
+        writer, reader = BufferWriter(SocketBuffer(s)), BufferReader(SocketBuffer(s))
+        while True:
+            writer.write_line('Hello, cruel world')
+            try:
+                data = reader.next_line()
+                print('Received', data.strip())
+                time.sleep(1)
+            except BaseException as err:
+                print(f'err: {err}')
+                break
+        return
 
         app = None
         node_type = NodeActions.extract_type()
