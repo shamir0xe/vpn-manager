@@ -18,6 +18,7 @@ class ServerState:
             log.add_log('waiting for a client', 'client-wait')
             while True:
                 conn_socket, address = sock.accept()
+                conn_socket.setblocking(False)
                 def main():
                     log.add_log(f'client {address} connected', 'client-req')
                     try:
@@ -38,5 +39,5 @@ class ServerState:
         except BaseException as err:
             log.add_log(f'error: {err}', 'main-server')
         finally:
-            sock.shutdown()
+            sock.shutdown(1)
             sock.close()

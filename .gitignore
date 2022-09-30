@@ -1,5 +1,7 @@
 # assets and env
-assets/
+assets/*
+output/
+storage/*
 env.json
 
 

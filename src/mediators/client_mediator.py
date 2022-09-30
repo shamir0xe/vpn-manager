@@ -14,7 +14,9 @@ class ClientMediator:
         self.__log = log
         self.status = True
         self.sock = SocketHelper.TCPIp()
-        self.sock.settimeout(Config.read('main.conection.timeout'))
+        ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
+        self.sock.connect((ip, port))
+        self.sock.setblocking(False)
         self.writer = BufferWriter(SocketBuffer(self.sock))
         self.reader = BufferReader(SocketBuffer(self.sock))
     
@@ -32,9 +34,7 @@ class ClientMediator:
             return self
         try:
             self.__log.add_log(f'trying to...', 'login')
-            ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
             username, password = (Config.read('env.server.username'), Config.read('env.server.password'))
-            self.sock.connect((ip, port))
             self.writer.write(
                 f'{username}\n{password}\n'
             )
