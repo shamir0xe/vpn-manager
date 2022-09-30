@@ -7,6 +7,23 @@ from src.actions.node.node_actions import NodeActions
 class ModifyState:
     @staticmethod
     def run(flow: FlowTypes) -> None:
+        import socket
+        import time
+
+        HOST = '127.0.0.1'        # The remote host
+        # HOST = 'zimbo.app'        # The remote host
+        PORT = 50007              # The same port as used by the server
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST, PORT))
+            while True:
+                s.sendall(b'Hello, world')
+                data = s.recv(1024)
+                if not data:
+                    break
+                print('Received', repr(data))
+                time.sleep(1)
+        return
+
         app = None
         node_type = NodeActions.extract_type()
         app = App(node_type=node_type, flow=flow) \

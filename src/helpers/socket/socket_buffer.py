@@ -4,21 +4,18 @@ from libs.python_library.io.buffer import Buffer
 
 
 class SocketBuffer(Buffer):
-    MSG_LEN = 100
+    HEADER_LEN = 10
     def __init__(self, sock: socket) -> None:
         self.sock = sock
     
-    def read(self, count: int = 1) -> str:
+    def read_exact_count(self, count: int) -> str:
         while True:
             try:
-                print('we are waiting')
-                import time
-                time.sleep(0.1)
                 chunks = []
                 received_cnt = 0
-                while received_cnt < self.MSG_LEN:
-                    chunk = self.sock.recv(self.MSG_LEN - received_cnt)
-                    if chunk == b'':
+                while received_cnt < count:
+                    chunk = self.sock.recv(count - received_cnt)
+                    if len(chunk) <= 0:
                         raise RuntimeError("socket connection broken")
                     chunks.append(chunk)
                     received_cnt += len(chunk)
@@ -36,15 +33,19 @@ class SocketBuffer(Buffer):
 
                 # We just did not receive anything
                 continue
+
+    def read(self, _) -> str:
+        msg_len = int(self.read_exact_count(self.HEADER_LEN).strip())
+        return self.read_exact_count(msg_len)
     
     def write(self, string: str) -> None:
-        msg_array = bytearray(string.encode())
-        while len(msg_array) < self.MSG_LEN:
-            msg_array.extend(bytearray(b' '))
+        msg_bytes = string.encode()
+        header = f'{len(msg_bytes):<{self.HEADER_LEN}}'.encode()
+        msg_bytes = header + msg_bytes
         total_send = 0
-        while total_send < self.MSG_LEN:
-            sent = self.sock.send(msg_array[total_send:])
-            if sent == 0:
+        while total_send < len(msg_bytes):
+            sent = self.sock.send(msg_bytes[total_send:])
+            if sent <= 0:
                 raise RuntimeError("socket connection broken")
             total_send += sent
         # print('~~~ sent successfully')

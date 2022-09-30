@@ -2,7 +2,7 @@
     "gate": {
         "name": "gate",
         "config": {
-            "path": "/etc/temp/gate0.conf"
+            "path": "/etc/wireguard/gate0.conf"
         },
         "commands": {
             "up": "wg-quick up gate0",
@@ -26,7 +26,7 @@
     "middleman": {
         "name": "middleman",
         "config": {
-            "path": "/etc/temp/wg0.conf"
+            "path": "/etc/wireguard/wg0.conf"
         },
         "commands": {
             "up": "wg-quick up wg0",

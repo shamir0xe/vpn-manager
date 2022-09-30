@@ -3,14 +3,14 @@
         "interface": {
             "address": "10.49.0.99/32",
             "wg": "wg0",
-            "port": 51607,
+            "port": 10086,
             "private_key": "",
             "mtu": 1380
         },
         "peer": {
             "public_key": "",
             "ip": "",
-            "port": 51345
+            "port": 10056
         }
     },
     "order": [
