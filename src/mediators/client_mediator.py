@@ -7,19 +7,22 @@ from src.actions.node.node_actions import NodeActions
 from src.helpers.socket.socket_buffer import SocketBuffer
 from src.helpers.log.runtime_log import RuntimeLog
 from src.helpers.socket.socket_helper import SocketHelper
+import socket
 
 
 class ClientMediator:
     def __init__(self, log: RuntimeLog = None) -> None:
         self.__log = log
         self.status = True
-        self.sock = SocketHelper.TCPIp()
+        # self.sock = SocketHelper.TCPIp()
         ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
-        ip = '185.235.40.240'
-        # ip = '127.0.0.1'
         port = 50007
+        ip = '185.235.40.240'
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((ip, port))
-        self.sock.setblocking(False)
+        # ip = '127.0.0.1'
+        # self.sock.connect((ip, port))
+        # self.sock.setblocking(False)
         self.writer = BufferWriter(SocketBuffer(self.sock))
         self.reader = BufferReader(SocketBuffer(self.sock))
     
