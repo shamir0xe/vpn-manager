@@ -16,18 +16,18 @@ class ModifyState:
         # HOST = '127.0.0.1'   # The remote host
         HOST = '185.235.40.240'   # The remote host
         PORT = 50007              # The same port as used by the server
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((HOST, PORT))
-            writer, reader = BufferWriter(SocketBuffer(s)), BufferReader(SocketBuffer(s))
-            while True:
-                writer.write_line('Hello, cruel world')
-                try:
-                    data = reader.next_line()
-                    print('Received', data.strip())
-                    time.sleep(1)
-                except BaseException as err:
-                    print(f'err: {err}')
-                    break
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((HOST, PORT))
+        writer, reader = BufferWriter(SocketBuffer(s)), BufferReader(SocketBuffer(s))
+        while True:
+            writer.write_line('Hello, cruel world')
+            try:
+                data = reader.next_line()
+                print('Received', data.strip())
+                time.sleep(1)
+            except BaseException as err:
+                print(f'err: {err}')
+                break
         return
 
         app = None
