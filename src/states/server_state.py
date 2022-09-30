@@ -9,7 +9,11 @@ class ServerState:
     @staticmethod
     def run():
         import socket
+        from libs.python_library.io.buffer_reader import BufferReader
+        from libs.python_library.io.buffer_writer import BufferWriter
+        from src.helpers.socket.socket_buffer import SocketBuffer
 
+        # HOST = '127.0.0.1'   # Symbolic name meaning all available interfaces
         HOST = '185.235.40.240'   # Symbolic name meaning all available interfaces
         PORT = 50007              # Arbitrary non-privileged port
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -17,13 +21,15 @@ class ServerState:
             s.listen(1)
             while True:
                 conn, addr = s.accept()
+                writer, reader = BufferWriter(SocketBuffer(conn)), BufferReader(SocketBuffer(conn))
                 with conn:
                     print('Connected by', addr)
-                    while True:
-                        data = conn.recv(1024)
-                        if not data: 
-                           break
-                        conn.sendall(data)
+                    try:
+                        while True:
+                            data = reader.next_line().strip()
+                            writer.write_line(data)
+                    except BaseException as err:
+                        print(f'err: {err}')
 
         log = RuntimeLog(*Config.read('main.server.log.path'))
         log.add_log('server started', 'server-state')

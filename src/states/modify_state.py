@@ -9,19 +9,25 @@ class ModifyState:
     def run(flow: FlowTypes) -> None:
         import socket
         import time
+        from libs.python_library.io.buffer_reader import BufferReader
+        from libs.python_library.io.buffer_writer import BufferWriter
+        from src.helpers.socket.socket_buffer import SocketBuffer
 
+        # HOST = '127.0.0.1'   # The remote host
         HOST = '185.235.40.240'   # The remote host
-        # HOST = 'zimbo.app'      # The remote host
         PORT = 50007              # The same port as used by the server
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
+            writer, reader = BufferWriter(SocketBuffer(s)), BufferReader(SocketBuffer(s))
             while True:
-                s.sendall(b'Hello, world')
-                data = s.recv(1024)
-                if not data:
+                writer.write_line('Hello, cruel world')
+                try:
+                    data = reader.next_line()
+                    print('Received', data.strip())
+                    time.sleep(1)
+                except BaseException as err:
+                    print(f'err: {err}')
                     break
-                print('Received', repr(data))
-                time.sleep(1)
         return
 
         app = None
