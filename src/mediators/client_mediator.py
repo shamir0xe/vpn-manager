@@ -15,6 +15,9 @@ class ClientMediator:
         self.status = True
         self.sock = SocketHelper.TCPIp()
         ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
+        # ip = '185.235.40.240'
+        ip = '127.0.0.1'
+        port = 50007
         self.sock.connect((ip, port))
         self.sock.setblocking(False)
         self.writer = BufferWriter(SocketBuffer(self.sock))
