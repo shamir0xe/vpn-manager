@@ -27,7 +27,14 @@ class ServerMediator:
         self.reader.next_char()
         print(f'final receive: {rec}')
 
-        self.writer.write_line('we heard ur voice, now it\'s ur turn')
+        print('delay for 3 secs')
+        import time
+        time.sleep(3)
+
+        self.writer.write_line('we heard ur voice, now it\'s our turn')
+        print('waiting to close socket')
+        time.sleep(6)
+
         return self
     
     def auth(self) -> ServerMediator:
