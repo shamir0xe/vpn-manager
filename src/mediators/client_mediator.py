@@ -11,12 +11,37 @@ from src.helpers.socket.socket_helper import SocketHelper
 
 class ClientMediator:
     def __init__(self, log: RuntimeLog = None) -> None:
-        self.__log = log
+        self.log = log
         self.status = True
         self.sock = SocketHelper.TCPIp()
         
         self.writer = BufferWriter(SocketBuffer(self.sock))
         self.reader = BufferReader(SocketBuffer(self.sock))
+    
+    def test(self) -> ClientMediator:
+        if not self.status:
+            return self
+        sock = SocketHelper.TCPIp()
+        writer, reader = BufferWriter(SocketBuffer(sock)), BufferReader(SocketBuffer(sock))
+        ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
+        sock.connect((ip, port))
+        sock.setblocking(False)
+
+        writer.write_line('We are the client, can u hear me?')
+
+        rec = ''
+        while reader.next_char(pick=True) != '\n':
+            print(f'recieved this: {reader.next_char(pick=True)}')
+            rec += reader.next_char()
+        reader.next_char()
+        print(f'final receive: {rec}')
+
+        print('waiting 10s to close socket')
+        import time
+        time.sleep(10)
+
+        sock.close()
+        return self
     
     def check_network(self) -> ClientMediator:
         if not self.status:
@@ -24,7 +49,7 @@ class ClientMediator:
         access = NodeActions.access_peer()
         if not access:
             self.status = False
-        self.__log.add_log(f'peer ping {access}', 'check-network')
+        self.log.add_log(f'peer ping {access}', 'check-network')
         return self
     
     def login(self) -> ClientMediator:

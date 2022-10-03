@@ -12,6 +12,7 @@ class ModifyState:
         app = App(node_type=node_type, flow=flow) \
             .add_log('\n') \
             .add_log(f'start of the {node_type.value} process')
+
         if ArgumentParser.is_option('debug'):
             # debug
             app \

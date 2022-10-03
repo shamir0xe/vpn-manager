@@ -11,9 +11,9 @@ class ServerState:
         log = RuntimeLog(*Config.read('main.server.log.path'))
         log.add_log('server started', 'server-state')
         log.add_log(f'listening to {Config.read("env.server.ip")}:{Config.read("env.server.port")}', 'server-state')
-        sock = SocketHelper.TCPIp()
+        sock = SocketHelper.TCPIpReusable()
         sock.bind((Config.read('env.server.ip'), Config.read('env.server.port')))
-        sock.listen(1)
+        sock.listen(5)
         try:
             log.add_log('waiting for a client', 'client-wait')
             while True:
@@ -23,8 +23,10 @@ class ServerState:
                     log.add_log(f'client {address} connected', 'client-req')
                     try:
                         ServerMediator(sock=conn_socket, log=log) \
-                            .auth() \
-                            .resolve_loop()
+                            .test()
+                        # ServerMediator(sock=conn_socket, log=log) \
+                        #     .auth() \
+                        #     .resolve_loop()
                     except BaseException as err:
                         log.add_log(f'error: {err}', 'runtime-error')
                     return 0

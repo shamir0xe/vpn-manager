@@ -13,9 +13,22 @@ class ServerMediator:
         self.status = True
         self.sock = sock
         self.log = log
-        buffer = SocketBuffer(sock)
-        self.reader = BufferReader(buffer)
-        self.writer = BufferWriter(buffer)
+        self.reader = BufferReader(SocketBuffer(sock))
+        self.writer = BufferWriter(SocketBuffer(sock))
+    
+    def test(self) -> ServerMediator:
+        if not self.status:
+            return self
+
+        rec = ''
+        while self.reader.next_char(pick=True) != '\n':
+            print(f'recieved this: {self.reader.next_char(pick=True)}')
+            rec += self.reader.next_char()
+        self.reader.next_char()
+        print(f'final receive: {rec}')
+
+        self.writer.write_line('we heard ur voice, now it\'s ur turn')
+        return self
     
     def auth(self) -> ServerMediator:
         if not self.status:

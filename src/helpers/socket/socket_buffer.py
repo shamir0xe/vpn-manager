@@ -5,6 +5,7 @@ from libs.python_library.io.buffer import Buffer
 
 class SocketBuffer(Buffer):
     HEADER_LEN = 10
+    CODEC = 'utf-8'
     def __init__(self, sock: socket) -> None:
         self.sock = sock
     
@@ -19,7 +20,7 @@ class SocketBuffer(Buffer):
                         raise RuntimeError("socket connection broken")
                     chunks.append(chunk)
                     received_cnt += len(chunk)
-                received_str = (b''.join(chunks)).decode()
+                received_str = (b''.join(chunks)).decode(self.CODEC)
                 # print('~~~ received: ' + received_str)
                 return received_str
             except IOError as e:
@@ -39,8 +40,8 @@ class SocketBuffer(Buffer):
         return self.read_exact_count(msg_len)
     
     def write(self, string: str) -> None:
-        msg_bytes = string.encode()
-        header = f'{len(msg_bytes):<{self.HEADER_LEN}}'.encode()
+        msg_bytes = string.encode(self.CODEC)
+        header = f'{len(msg_bytes):<{self.HEADER_LEN}}'.encode(self.CODEC)
         msg_bytes = header + msg_bytes
         total_send = 0
         while total_send < len(msg_bytes):

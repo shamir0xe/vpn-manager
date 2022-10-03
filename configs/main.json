@@ -59,7 +59,7 @@
     },
     "connection": {
         "timeout": 2,
-        "total_timeout": 10
+        "total_timeout": 15
     },
     "general": {
         "python_interpreter": "python3"
