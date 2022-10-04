@@ -21,13 +21,14 @@ class ServerMediator:
             return self
 
         self.writer.write_line('we are the server, welcome!')
+        self.writer.write_line('we can say a lot!')
+        self.writer.write_line('just believe in us!')
 
-        rec = ''
-        while self.reader.next_char(pick=True) != '\n':
-            print(f'recieved this: {self.reader.next_char(pick=True)}')
-            rec += self.reader.next_char()
-        self.reader.next_char()
-        print(f'final receive: {rec}')
+        rec = self.reader.next_line().strip()
+        print(f'received: {rec}')
+        
+        self.writer.write_line('it is a test, obv!')
+        self.writer.write_line('last one, I swear!')
 
         print('delay for 3 secs')
         import time
