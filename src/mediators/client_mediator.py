@@ -2,6 +2,7 @@ from __future__ import annotations
 from libs.python_library.io.buffer_reader import BufferReader
 from libs.python_library.io.buffer_writer import BufferWriter
 from libs.python_library.config.config import Config
+from src.helpers.bytes.bytes_helper import BytesHelper
 from src.models.types.server_commands import ServerCommands
 from src.actions.node.node_actions import NodeActions
 from src.helpers.socket.socket_buffer import SocketBuffer
@@ -25,58 +26,19 @@ class ClientMediator:
         writer, reader = BufferWriter(SocketBuffer(sock)), BufferReader(SocketBuffer(sock))
         ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
         sock.connect((ip, port))
-        sock.setblocking(False)
+        sock.setblocking(True)
 
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
+        BUFFER_PADDING = 100
+        ENCODING = 'utf-8'
+        for i in range(10):
+            rec = sock.recv(BUFFER_PADDING)
+            print(f'we received this: {rec.decode(ENCODING)}')
 
-        print('           ')
-        writer.write('We heard u, We are the client ')
-
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
-        rec = reader.next_string()
-        print(f'received: {rec}')
+        print('now we send smt...')
+        sock.sendall(BytesHelper.padding(bytes('We heard u, we are the client', ENCODING), BUFFER_PADDING))
+        
+        rec = sock.recv(BUFFER_PADDING)
+        print(f'we received this again: {rec.decode(ENCODING)}')
 
         print('waiting 6 to close socket')
         import time

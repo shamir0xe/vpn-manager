@@ -34,7 +34,6 @@ class ModifyState:
             .save() \
             .add_new_ufw() \
             .reset_ufw_service() \
-            .send_changes_to_gates() \
             .up_vpn()
         # log part
         app \

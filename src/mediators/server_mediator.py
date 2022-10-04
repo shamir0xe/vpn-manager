@@ -3,6 +3,7 @@ from re import I
 import socket
 from libs.python_library.io.buffer_reader import BufferReader
 from libs.python_library.io.buffer_writer import BufferWriter
+from src.helpers.bytes.bytes_helper import BytesHelper
 from src.helpers.log.runtime_log import RuntimeLog
 from src.helpers.socket.socket_buffer import SocketBuffer
 from src.actions.server.authentication import Authentication
@@ -21,28 +22,21 @@ class ServerMediator:
         if not self.status:
             return self
 
-        import time
-        print('sending 1')
-        self.writer.write('we are the server, welcome! ')
-        time.sleep(1)
-        print('sending 2')
-        self.writer.write('we can say a lot! ')
-        time.sleep(1)
-        print('sending 3')
-        self.writer.write('just believe in us! ')
-        time.sleep(1)
 
-        rec = self.reader.next_string()
-        rec += ' ' + self.reader.next_string()
-        rec += ' ' + self.reader.next_string()
-        rec += ' ' + self.reader.next_string()
-        rec += ' ' + self.reader.next_string()
-        rec += ' ' + self.reader.next_string()
-        rec += ' ' + self.reader.next_string()
-        print(f'received: {rec}')
+        self.sock.setblocking(True)
+        BUFFER_PADDING = 100
+        ENCODING = 'utf-8'
+        import time
+        for i in range(10):
+            print(f'sending {i}')
+            self.sock.sendall(BytesHelper.padding(bytes(f'Hello {i}', ENCODING), BUFFER_PADDING))
+            time.sleep(.3)
+
+        rec = self.sock.recv(BUFFER_PADDING)
+        print(f'received: {rec.decode(ENCODING)}')
         
-        self.writer.write('it is a test, obv! ')
-        self.writer.write('last one, I swear! ')
+        print('now sending smt...')
+        self.sock.sendall(BytesHelper.padding(b'after receiving, we are sending this', BUFFER_PADDING))
 
         print('delay for 3 secs')
         import time
