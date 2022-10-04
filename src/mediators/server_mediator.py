@@ -1,4 +1,5 @@
 from __future__ import annotations
+from re import I
 import socket
 from libs.python_library.io.buffer_reader import BufferReader
 from libs.python_library.io.buffer_writer import BufferWriter
@@ -20,15 +21,25 @@ class ServerMediator:
         if not self.status:
             return self
 
-        self.writer.write_line('we are the server, welcome!')
-        self.writer.write_line('we can say a lot!')
-        self.writer.write_line('just believe in us!')
+        import time
+        self.writer.write('we are the server, welcome! ')
+        time.sleep(1)
+        self.writer.write('we can say a lot! ')
+        time.sleep(1)
+        self.writer.write('just believe in us! ')
+        time.sleep(1)
 
-        rec = self.reader.next_line().strip()
+        rec = self.reader.next_string()
+        rec += ' ' + self.reader.next_string()
+        rec += ' ' + self.reader.next_string()
+        rec += ' ' + self.reader.next_string()
+        rec += ' ' + self.reader.next_string()
+        rec += ' ' + self.reader.next_string()
+        rec += ' ' + self.reader.next_string()
         print(f'received: {rec}')
         
-        self.writer.write_line('it is a test, obv!')
-        self.writer.write_line('last one, I swear!')
+        self.writer.write('it is a test, obv! ')
+        self.writer.write('last one, I swear! ')
 
         print('delay for 3 secs')
         import time

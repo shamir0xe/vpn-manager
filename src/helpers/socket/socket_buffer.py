@@ -34,6 +34,9 @@ class SocketBuffer(Buffer):
 
                 # We just did not receive anything
                 continue
+        
+    def flush(self):
+        return None
 
     def read(self, _) -> str:
         msg_len = int(self.read_exact_count(self.HEADER_LEN).strip())
