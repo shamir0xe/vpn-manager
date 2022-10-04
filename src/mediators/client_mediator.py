@@ -27,8 +27,6 @@ class ClientMediator:
         sock.connect((ip, port))
         sock.setblocking(False)
 
-        writer.write_line('We are the client, can u hear me?')
-
         rec = ''
         while reader.next_char(pick=True) != '\n':
             print(f'recieved this: {reader.next_char(pick=True)}')
@@ -36,10 +34,14 @@ class ClientMediator:
         reader.next_char()
         print(f'final receive: {rec}')
 
-        print('waiting 10s to close socket')
+        print('waiting 3s to send reply')
         import time
-        time.sleep(10)
+        time.sleep(3)
+        writer.write_line('We heard u, We are the client')
 
+        print('waiting 6 to close socket')
+        import time
+        time.sleep(6)
         sock.close()
         return self
     

@@ -20,6 +20,8 @@ class ServerMediator:
         if not self.status:
             return self
 
+        self.writer.write_line('we are the server, welcome!')
+
         rec = ''
         while self.reader.next_char(pick=True) != '\n':
             print(f'recieved this: {self.reader.next_char(pick=True)}')
@@ -31,9 +33,8 @@ class ServerMediator:
         import time
         time.sleep(3)
 
-        self.writer.write_line('we heard ur voice, now it\'s our turn')
-        print('waiting to close socket')
-        time.sleep(6)
+        # print('waiting to close socket')
+        # time.sleep(6)
 
         return self
     
