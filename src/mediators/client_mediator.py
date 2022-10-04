@@ -1,4 +1,7 @@
 from __future__ import annotations
+
+from requests import request
+import requests
 from libs.python_library.io.buffer_reader import BufferReader
 from libs.python_library.io.buffer_writer import BufferWriter
 from libs.python_library.config.config import Config
@@ -21,19 +24,19 @@ class ClientMediator:
     def test(self) -> ClientMediator:
         if not self.status:
             return self
-        import socket
+        import  json
         host, port = Config.read('env.server.ip'), Config.read('env.server.port')
-        data = 'we are the client, bla bla...'
-        print(f'sending this: {data}')
-        # Create a socket (SOCK_STREAM means a TCP socket)
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            # Connect to server and send data
-            sock.connect((host, port))
-            sock.sendall(bytes(data + "\n", "utf-8"))
-
-            # Receive data from the server and shut down
-            received = str(sock.recv(1024), "utf-8")
-        print(f'received this: {received}')
+        url = f'http://{host}:{port}/login'
+        obj = {
+            'username': 'test',
+            'password': 123
+        }
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        x = requests.post(headers=headers, url=url, json=obj)
+        res = json.loads(x.content)
+        print(f'res: {res}')
         return self
     
     def check_network(self) -> ClientMediator:

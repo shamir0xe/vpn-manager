@@ -5,16 +5,44 @@ from src.helpers.log.runtime_log import RuntimeLog
 from src.helpers.socket.socket_helper import SocketHelper
 from src.mediators.server_mediator import ServerMediator
 import socketserver
+from bottle import route, run, template, request
+import sys
 
+
+@route('/hello/<name>')
+def index(name):
+    return template('<b>Hello {{name}}</b>!', name=name)
+
+@route('/login', method='POST')
+def login():
+    print(request.json)
+    username, password = (request.json['username'], request.json['password'])
+    request.content_type = 'application/json'
+    print(f'usr: {username}, pass: {password}')
+    if username == 'test' and password == 123:
+        return '''
+        {
+            "status": true,
+            "message": "ok"
+        }
+        '''
+    else:
+        return '''
+        {
+            "status": false,
+            "message": "wrong credentials"
+        }
+        '''
 
 class ServerState:
     @staticmethod
     def run():
         host, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
-        with socketserver.TCPServer((host, port), RequestHandler) as server:
-            print(f'starting the server on ({host}, {port})')
-            server.allow_reuse_address = True
-            server.serve_forever()
+        run(host=host, port=port, debug=True)
+        # socketserver.TCPServer.allow_reuse_address = True
+        # with socketserver.TCPServer((host, port), RequestHandler) as server:
+        #     print(f'starting the server on ({host}, {port})')
+        #     server.serve_forever()
         # log = RuntimeLog(*Config.read('main.server.log.path'))
         # log.add_log('server started', 'server-state')
         # log.add_log(f'listening to {Config.read("env.server.ip")}:{Config.read("env.server.port")}', 'server-state')
