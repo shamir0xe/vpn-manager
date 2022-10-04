@@ -22,10 +22,13 @@ class ServerMediator:
             return self
 
         import time
+        print('sending 1')
         self.writer.write('we are the server, welcome! ')
         time.sleep(1)
+        print('sending 2')
         self.writer.write('we can say a lot! ')
         time.sleep(1)
+        print('sending 3')
         self.writer.write('just believe in us! ')
         time.sleep(1)
 

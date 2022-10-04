@@ -31,6 +31,9 @@ class SocketBuffer(Buffer):
                 if e.errno != errno.EAGAIN and e.errno != errno.EWOULDBLOCK:
                     print('Reading error: {}'.format(str(e)))
                     raise e
+                import time
+                time.sleep(0.2)
+                print(f'patiently waiting for {count} char to read')
 
                 # We just did not receive anything
                 continue
@@ -45,7 +48,7 @@ class SocketBuffer(Buffer):
     def write(self, string: str) -> None:
         msg_bytes = string.encode(self.CODEC)
         header = f'{len(msg_bytes):<{self.HEADER_LEN}}'.encode(self.CODEC)
-        msg_bytes = header + msg_bytes
+        msg_bytes = b''.join([header, msg_bytes])
         total_send = 0
         while total_send < len(msg_bytes):
             sent = self.sock.send(msg_bytes[total_send:])
