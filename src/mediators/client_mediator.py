@@ -15,35 +15,25 @@ class ClientMediator:
         self.log = log
         self.status = True
         self.sock = SocketHelper.TCPIp()
-        
         self.writer = BufferWriter(SocketBuffer(self.sock))
         self.reader = BufferReader(SocketBuffer(self.sock))
     
     def test(self) -> ClientMediator:
         if not self.status:
             return self
-        sock = SocketHelper.TCPIp()
-        writer, reader = BufferWriter(SocketBuffer(sock)), BufferReader(SocketBuffer(sock))
-        ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
-        sock.connect((ip, port))
-        sock.setblocking(True)
+        import socket
+        host, port = Config.read('env.server.ip'), Config.read('env.server.port')
+        data = 'we are the client, bla bla...'
+        print(f'sending this: {data}')
+        # Create a socket (SOCK_STREAM means a TCP socket)
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            # Connect to server and send data
+            sock.connect((host, port))
+            sock.sendall(bytes(data + "\n", "utf-8"))
 
-        BUFFER_PADDING = 100
-        ENCODING = 'utf-8'
-        for i in range(10):
-            rec = sock.recv(BUFFER_PADDING)
-            print(f'we received this: {rec.decode(ENCODING)}')
-
-        print('now we send smt...')
-        sock.sendall(BytesHelper.padding(bytes('We heard u, we are the client', ENCODING), BUFFER_PADDING))
-        
-        rec = sock.recv(BUFFER_PADDING)
-        print(f'we received this again: {rec.decode(ENCODING)}')
-
-        print('waiting 6 to close socket')
-        import time
-        time.sleep(6)
-        sock.close()
+            # Receive data from the server and shut down
+            received = str(sock.recv(1024), "utf-8")
+        print(f'received this: {received}')
         return self
     
     def check_network(self) -> ClientMediator:
