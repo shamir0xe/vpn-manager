@@ -14,8 +14,12 @@ class RequestMediator:
             'Content-Type': 'application/json'
         }
 
-    def set_url(self, ex_url: str) -> RequestMediator:
+    def append_url(self, ex_url: str) -> RequestMediator:
         self.url += '/' + ex_url
+        return self
+    
+    def set_url(self, url: str) -> RequestMediator:
+        self.url = url
         return self
     
     def set_payload(self, payload: dict) -> RequestMediator:

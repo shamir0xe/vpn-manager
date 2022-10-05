@@ -1,4 +1,5 @@
 from __future__ import annotations
+from datetime import datetime
 import json
 from libs.python_library.file.file import File
 from libs.python_library.argument.argument_parser import ArgumentParser
@@ -12,6 +13,7 @@ from src.actions.terminal.terminal_executer import TerminalExecuter
 from src.helpers.log.runtime_log import RuntimeLog
 from src.builders.extension_builder import ExtensionBuilder
 from src.mediators.client_mediator import ClientMediator
+from src.helpers.telegram.telegram_helper import TelegramHelper
 
 
 class App:
@@ -205,4 +207,20 @@ class App:
     def telegram_broadcast(self) -> App:
         if not self.status:
             return self
+        self.__log.add_log('preparing to broadcast', 'telegram')
+        if self.node_type is NodeTypes.GATE:
+            res = TelegramHelper.send_message(
+                f'changed port to {JsonHelper.selector_get_value(self.config_json, "interface.port")}',
+                self.node_type.value
+            )
+            self.__log.add_log(res.ok, 'telegram')
+        elif self.node_type is NodeTypes.MIDDLEMAN and datetime.now().minute == 50:
+            if self.status:
+                message = 'live and alive'
+            else:
+                message = 'something bad happened'
+            res = TelegramHelper.send_message(
+                message, self.node_type.value
+            )
+            self.__log.add_log(res.ok, 'telegram')
         return self

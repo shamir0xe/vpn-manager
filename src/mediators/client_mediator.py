@@ -36,7 +36,7 @@ class ClientMediator:
         if not self.status:
             return self
         res = RequestMediator() \
-            .set_url('login') \
+            .append_url('login') \
             .set_payload({
                 'username': Config.read('env.server.username'),
                 'password': Config.read('env.server.password')
@@ -55,7 +55,7 @@ class ClientMediator:
         if not self.status:
             return self
         res = RequestMediator() \
-            .set_url('change_ports') \
+            .append_url('change_ports') \
             .set_payload({
                 'token': self.token,
                 'interface_port': gate_port,

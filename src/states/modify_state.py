@@ -19,7 +19,7 @@ class ModifyState:
                 .read_local_config() \
                 .apply_arguments_config() \
                 .apply_env() \
-                .send_changes_to_gates()
+                .telegram_broadcast()
             return
         # main part
         app \
