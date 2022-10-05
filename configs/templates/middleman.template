@@ -9,10 +9,12 @@ PostDown = echo 0 > /proc/sys/net/ipv4/conf/all/proxy_arp
 ListenPort = {}
 PrivateKey = {}
 SaveConfig = false
-MTU = {}
+# MTU = {}
 
 [Peer]
 # gate
 PublicKey = {}
 AllowedIPs = 0.0.0.0/0
 Endpoint = {}:{}
+PersistentKeepalive = {}
+

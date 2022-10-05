@@ -5,8 +5,8 @@
             "path": "/etc/wireguard/gate0.conf"
         },
         "commands": {
-            "up": "wg-quick up gate0",
-            "down": "wg-quick down gate0",
+            "up": "wg-quick up /etc/wireguard/gate0.conf",
+            "down": "wg-quick down /etc/wireguard/gate0.conf",
             "ufw": {
                 "delete": ["ufw", "delete", "allow"],
                 "allow": ["ufw", "allow"]
@@ -29,8 +29,8 @@
             "path": "/etc/wireguard/wg0.conf"
         },
         "commands": {
-            "up": "wg-quick up wg0",
-            "down": "wg-quick down wg0",
+            "up": "wg-quick up /etc/wireguard/wg0.conf",
+            "down": "wg-quick down /etc/wireguard/wg0.conf",
             "ufw": {
                 "delete": ["ufw", "delete", "allow"],
                 "allow": ["ufw", "allow"]

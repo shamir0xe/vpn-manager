@@ -33,8 +33,8 @@ class ModifyState:
             .build_template() \
             .save() \
             .add_new_ufw() \
-            .reset_ufw_service() \
             .send_changes_to_gates() \
+            .reset_ufw_service() \
             .up_vpn()
         # log part
         app \

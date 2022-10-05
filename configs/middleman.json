@@ -10,7 +10,8 @@
         "peer": {
             "public_key": "",
             "ip": "",
-            "port": 10056
+            "port": 10056,
+            "persistent_keepalive": 25
         }
     },
     "order": [
@@ -24,6 +25,7 @@
         "interface.mtu",
         "peer.public_key",
         "peer.ip",
-        "peer.port"
+        "peer.port",
+        "peer.persistent_keepalive"
     ]
 }
