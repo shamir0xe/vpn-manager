@@ -54,7 +54,7 @@ class ServerMediator:
         username = self.reader.next_line().strip()
         password = self.reader.next_line().strip()
         self.log.add_log(f'({username}, {password})', 'login-attempt')
-        if Authentication.withUsername(username, password):
+        if Authentication.with_username(username, password):
             self.writer.write_line('OK')
             self.log.add_log('user logged in', 'login')
         else:

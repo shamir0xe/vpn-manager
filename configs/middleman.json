@@ -3,7 +3,7 @@
         "interface": {
             "address": "10.49.0.99/32",
             "wg": "wg0",
-            "port": 10086,
+            "port": 25,
             "private_key": "",
             "mtu": 1380
         },

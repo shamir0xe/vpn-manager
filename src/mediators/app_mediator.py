@@ -183,25 +183,19 @@ class App:
         if self.node_type is NodeTypes.GATE:
             return self
         # node type is MIDDLEMAN
-
-        # for debug
-        ClientMediator(log=self.__log).test()
-
-        # ClientMediator(log=self.__log) \
-        #     .check_network() \
-        #     .login() \
-        #     .request_modification(
-        #         port=JsonHelper.selector_get_value(
-        #             self.config_json, 
-        #             'interface.port'
-        #         ),
-        #         gate_port=JsonHelper.selector_get_value(
-        #             self.config_json,
-        #             'peer.port'
-        #         )
-        #     ) \
-        #     .request_end() \
-        #     .close()
+        ClientMediator(log=self.__log) \
+            .check_network() \
+            .login() \
+            .request_modification(
+                port=JsonHelper.selector_get_value(
+                    self.config_json, 
+                    'interface.port'
+                ),
+                gate_port=JsonHelper.selector_get_value(
+                    self.config_json,
+                    'peer.port'
+                )
+            )
         return self
 
     def closure(self) -> App:

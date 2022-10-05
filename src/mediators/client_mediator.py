@@ -1,16 +1,13 @@
 from __future__ import annotations
 
-from requests import request
-import requests
 from libs.python_library.io.buffer_reader import BufferReader
 from libs.python_library.io.buffer_writer import BufferWriter
 from libs.python_library.config.config import Config
-from src.helpers.bytes.bytes_helper import BytesHelper
-from src.models.types.server_commands import ServerCommands
 from src.actions.node.node_actions import NodeActions
 from src.helpers.socket.socket_buffer import SocketBuffer
 from src.helpers.log.runtime_log import RuntimeLog
 from src.helpers.socket.socket_helper import SocketHelper
+from src.mediators.request_mediator import RequestMediator
 
 
 class ClientMediator:
@@ -24,19 +21,6 @@ class ClientMediator:
     def test(self) -> ClientMediator:
         if not self.status:
             return self
-        import  json
-        host, port = Config.read('env.server.ip'), Config.read('env.server.port')
-        url = f'http://{host}:{port}/login'
-        obj = {
-            'username': 'test',
-            'password': 123
-        }
-        headers = {
-            'Content-Type': 'application/json'
-        }
-        x = requests.post(headers=headers, url=url, json=obj)
-        res = json.loads(x.content)
-        print(f'res: {res}')
         return self
     
     def check_network(self) -> ClientMediator:
@@ -51,77 +35,36 @@ class ClientMediator:
     def login(self) -> ClientMediator:
         if not self.status:
             return self
-        try:
-            # self.__log.add_log(f'trying to...', 'login')
-            ip, port = (Config.read('env.server.ip'), Config.read('env.server.port'))
-            self.sock.connect((ip, port))
-            self.sock.setblocking(False)
-            print('trying to connect')
-            username, password = (Config.read('env.server.username'), Config.read('env.server.password'))
-            # self.writer.write_line('Hello cruel world')
-            # response = self.reader.next_line().strip()
-            # print(f'response: {response}')
-            # # self.__log.add_log(response, 'login-response')
-            # self.status = False
-            # return self
-
-            self.writer.write_line(
-                f'{username}\n{password}'
-            )
-            # self.writer.write_line(username)
-            # self.writer.write_line(password)
-            response = self.reader.next_line().strip()
-            # self.__log.add_log(response, 'login-response')
-            print(f'reponse: {response}')
-            if response != 'OK':
-                self.status = False
-                print(f'error: {response}')
-                # self.__log.add_log(f'error: {response}', 'login')
-        except BaseException as err:
+        res = RequestMediator() \
+            .set_url('login') \
+            .set_payload({
+                'username': Config.read('env.server.username'),
+                'password': Config.read('env.server.password')
+            }) \
+            .post() \
+            .response()
+        if not res.status:
             self.status = False
-            print(f'exception error: {err}')
-            # self.__log.add_log(f'error: {err}', 'login')
+            self.log.add_log(f'error: {res.response}', 'login')
+            return self
+        self.log.add_log('successfully logged in', 'login')
+        self.token = res.response['token']
         return self
     
     def request_modification(self, port: int, gate_port: int) -> ClientMediator:
         if not self.status:
             return self
-        try:
-            # self.__log.add_log('sending request', 'request-modification')
-            print(f'sending request')
-            self.writer.write_line(
-                f"{ServerCommands.RUN_MODIFICATION.value} --gate --interface.port {gate_port} --peer.port {port}"
-            )
-            response = self.reader.next_line().strip()
-            # self.__log.add_log(f'response: {response}', 'request-modification')
-            print(f'response: {response}')
-            if response != 'OK':
-                self.status = False
-                print(f'error: {response}')
-                # self.__log.add_log(f'error: {response}', 'request-modification')
-        except BaseException as err:
+        res = RequestMediator() \
+            .set_url('change_ports') \
+            .set_payload({
+                'token': self.token,
+                'interface_port': gate_port,
+                'peer_port': port
+            }) \
+            .post() \
+            .response()
+        if not res.status:
             self.status = False
-            print(f'error: {err}')
-            # self.__log.add_log(f'error: {err}', 'request-modification')
-        return self
-
-    def request_end(self) -> ClientMediator:
-        if not self.status:
-            return self
-        try:
-            # self.__log.add_log('requesting end', 'request-end')
-            print(f'requesting end')
-            self.writer.write_line(f"{ServerCommands.END.value}")
-            response = self.reader.next_line().strip()
-            print(f'response: {response}')
-            # self.__log.add_log(response, 'request-end')
-        except BaseException as err:
-            self.status = False
-        return self
-    
-    def close(self) -> ClientMediator:
-        try:
-            self.sock.close()
-        except BaseException as _:
-            pass
+            self.log.add_log(f'error: {res.response}', 'request-modification')
+        self.log.add_log(res.response, 'request-modification')
         return self
