@@ -30,11 +30,12 @@ class RequestMediator:
         self.headers = headers
         return self
     
-    def post(self) -> RequestMediator:
+    def post(self, timeout: int = Config.read('main.connection.request_timeout')) -> RequestMediator:
         self.request = requests.post(
             headers=self.headers, 
             url=self.url, 
-            json=self.payload
+            json=self.payload,
+            timeout=timeout
         )
         return self
     

@@ -61,7 +61,7 @@ class ClientMediator:
                 'interface_port': gate_port,
                 'peer_port': port
             }) \
-            .post() \
+            .post(timeout=Config.read('main.connection.total_timeout')) \
             .response()
         if not res.status:
             self.status = False

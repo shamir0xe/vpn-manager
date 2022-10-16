@@ -1,20 +1,11 @@
 [Interface]
-Address = {} 
-PostUp = echo 1 > /proc/sys/net/ipv4/ip_forward
-PostUp = echo 1 > /proc/sys/net/ipv4/conf/all/proxy_arp
-PostUp = iptables -A FORWARD -i {} -j ACCEPT && iptables -A FORWARD -o {} -j ACCEPT
-PostDown = iptables -D FORWARD -i {} -j ACCEPT && iptables -D FORWARD -o {} -j ACCEPT
-PostDown = echo 0 > /proc/sys/net/ipv4/ip_forward
-PostDown = echo 0 > /proc/sys/net/ipv4/conf/all/proxy_arp
-ListenPort = {}
+Address = {}
 PrivateKey = {}
-SaveConfig = false
-# MTU = {}
+Table = {}
 
 [Peer]
-# gate
 PublicKey = {}
+PresharedKey = {}
 AllowedIPs = 0.0.0.0/0
 Endpoint = {}:{}
 PersistentKeepalive = {}
-

@@ -11,6 +11,7 @@ class ChangePortsResolver(Resolver):
         if not Authentication.check_token(data.token):
             return (False, 'invalid token')
         print('valid token')
+        print('data received: %s' % data)
         out, err = TerminalExecuter.run_self(
             '--gate', 
             '--interface.port', data.interface_port, 

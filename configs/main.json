@@ -2,11 +2,11 @@
     "gate": {
         "name": "gate",
         "config": {
-            "path": "/etc/wireguard/gate0.conf"
+            "path": "/etc/wireguard/tunnel_g0.conf"
         },
         "commands": {
-            "up": "wg-quick up /etc/wireguard/gate0.conf",
-            "down": "wg-quick down /etc/wireguard/gate0.conf",
+            "up": "wg-quick up /etc/wireguard/tunnel_g0.conf",
+            "down": "wg-quick down /etc/wireguard/tunnel_g0.conf",
             "ufw": {
                 "delete": ["ufw", "delete", "allow"],
                 "allow": ["ufw", "allow"]
@@ -26,11 +26,11 @@
     "middleman": {
         "name": "middleman",
         "config": {
-            "path": "/etc/wireguard/wg0.conf"
+            "path": "/etc/wireguard/tunnel_m0.conf"
         },
         "commands": {
-            "up": "wg-quick up /etc/wireguard/wg0.conf",
-            "down": "wg-quick down /etc/wireguard/wg0.conf",
+            "up": "wg-quick up /etc/wireguard/tunnel_m0.conf",
+            "down": "wg-quick down /etc/wireguard/tunnel_m0.conf",
             "ufw": {
                 "delete": ["ufw", "delete", "allow"],
                 "allow": ["ufw", "allow"]
@@ -59,6 +59,7 @@
     },
     "connection": {
         "timeout": 2,
+        "request_timeout": 5,
         "total_timeout": 15
     },
     "general": {

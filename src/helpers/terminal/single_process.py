@@ -15,6 +15,7 @@ class SingleProcess:
             self.log.add_log('%s' % self.command, 'terminal')
 
     def run(self) -> SingleProcess:
+        print('command to run : %s' % self.command)
         self.proc = subprocess.Popen(
             shlex.split(self.command), 
             stdout=subprocess.PIPE,

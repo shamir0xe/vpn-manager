@@ -1,5 +1,4 @@
 from __future__ import annotations
-from datetime import datetime
 import json
 from libs.python_library.file.file import File
 from libs.python_library.argument.argument_parser import ArgumentParser
@@ -142,6 +141,11 @@ class App:
             'peer.ip',
             JsonHelper.selector_get_value(env, f'{self.peer_type.value}.ip')
         )
+        self.config_json = JsonHelper.selector_set_value(
+            self.config_json,
+            'preshared_key',
+            JsonHelper.selector_get_value(env, 'preshared_key')
+        )
         return self
 
     def build_template(self) -> App:
@@ -152,6 +156,8 @@ class App:
             return self
         self.template = None
         try:
+            print('config: \n', self.config_json)
+
             self.template = ExtensionBuilder(
                 node_type=self.node_type, 
                 config=self.config_json, 
@@ -214,13 +220,9 @@ class App:
                 self.node_type.value
             )
             self.__log.add_log(res.ok, 'telegram')
-        elif self.node_type is NodeTypes.MIDDLEMAN and datetime.now().minute == 50:
-            if self.status:
-                message = 'live and alive'
-            else:
-                message = 'something bad happened'
+        elif self.node_type is NodeTypes.MIDDLEMAN:
             res = TelegramHelper.send_message(
-                message, self.node_type.value
+                'settings have been changed', self.node_type.value
             )
             self.__log.add_log(res.ok, 'telegram')
         return self
